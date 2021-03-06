@@ -1,4 +1,14 @@
-const btn_saveTask = document.getElementById("form-group-save-task");
+const getElementById = (id) => {
+    return document.getElementById(id);
+}
+
+const btn_newTask = getElementById("new-task");
+btn_newTask.addEventListener("click", () => {
+    console.log("ok");
+    addTask();
+
+})
+
 
 let map_removeButton;
 
@@ -24,30 +34,60 @@ const getCurrentTasksLITemplate = (id, title, text) => {
         <button class="btn btn-secondary h-100" type="button" id="dropdownMenuItem1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-ellipsis-v" aria-hidden="true"></i>
         </button>
-        <div class="dropdown-menu p-2 flex-column" aria-labelledby="dropdownMenuItem1">
+        <div   class="dropdown-menu p-2 flex-column" aria-labelledby="dropdownMenuItem1">
           <button type="button" class="btn btn-success w-100">Complete</button>
           <button type="button" class="btn btn-info w-100 my-2">Edit</button>
-          <button id=${id}   type="button" class="btn btn-danger w-100">Delete</button>
+          <button type="button" class="btn btn-danger w-100">Delete</button>
         </div>
     </div>`);
 }
 
-const setClicksOnNode = (node) => {
+const editTodoTask = (selectedNode) => {
+
+    $('#exampleModal').modal("show");
+    getElementById("exampleModalLabel").innerText = "Edit task";
+    const btn_editTask = getElementById("form-group-save-task");
+    btn_editTask.innerText = "Edit task";
+    const node_id = selectedNode.parentNode.parentNode.parentNode.id;
+    const { id, title, text, radio: priority } = JSON.parse(localStorage.getItem(node_id));
+    setModalValues(title, text, priority);
+    btn_editTask.addEventListener("click", () => {
+        localStorage.removeItem(id);
+        addTodoToLocalStorage(id, id, ...getModalValues());
+
+    })
+}
+
+const getModalValues = () => {
+    const input_titleValue = getElementById("inputTitle").value;
+    const input_textValue = getElementById("inputText").value;
+    const input_radioValue = document.querySelector('input[name="gridRadios"]:checked').value;
+    return [input_titleValue, input_textValue, input_radioValue];
+}
+const setModalValues = (title, text, priority) => {
+    getElementById("inputTitle").value = title;
+    getElementById("inputText").value = text;
+    getElementById(priority).setAttribute("checked", "checked");
+}
+
+const setClicksOnNode = (node, func) => {
     for (let i = 0; i < node.length; i++) {
         node[i].addEventListener("click", () => {
-            removeToDoItem(node[i].id);
+            func(node[i]);
         })
     }
 }
-const removeToDoItem = (id) => {
-    const deletingElement = document.getElementById(`${id}`);
+
+const removeToDoItem = (selectedNode) => {
+    const id = selectedNode.parentNode.parentNode.parentNode.id;
+    const deletingElement = getElementById(`${id}`);
     deletingElement.parentNode.removeChild(deletingElement)
     localStorage.removeItem(id);
 }
 const getNodeTodoListItem = () => {
     const todos = getMapTodoFromLocalStarage();
     console.log(todos);
-    const getNodeULTodoItem = document.getElementById("currentTasks");
+    const getNodeULTodoItem = getElementById("currentTasks");
     todos.map(({ id, title, text }) => {
         const todoLINode = document.createElement("li");
         todoLINode.setAttribute("class", "list-group-item d-flex w-100 mb-2");
@@ -57,7 +97,10 @@ const getNodeTodoListItem = () => {
 
     })
     map_removeButton = document.querySelectorAll(".btn-danger");
-    setClicksOnNode(map_removeButton);
+    setClicksOnNode(map_removeButton, removeToDoItem);
+
+    const map_editButton = document.querySelectorAll(".btn-info");
+    setClicksOnNode(map_editButton, editTodoTask);
 }
 const addTodoToLocalStorage = (key, id, title, text, radio) => {
     const todoObject = {
@@ -70,16 +113,18 @@ const addTodoToLocalStorage = (key, id, title, text, radio) => {
 }
 
 
+const addTask = () => {
+    const btn_saveTask = getElementById("form-group-save-task");
+    $('#exampleModal').modal("show");
+    btn_saveTask.addEventListener("click", () => {
+        console.log("ok");
+        const id_dateValue = +new Date;
+        addTodoToLocalStorage(id_dateValue, id_dateValue, ...getModalValues());
+    });
+}
 
 
 
-btn_saveTask.addEventListener("click", () => {
-    const id_dateValue = +new Date;
-    const input_titleValue = document.getElementById("inputTitle").value;
-    const input_textValue = document.getElementById("inputText").value;
-    const input_radioValue = document.querySelector('input[name="gridRadios"]:checked').value;
-    addTodoToLocalStorage(id_dateValue, id_dateValue, input_titleValue, input_textValue, input_radioValue);
-});
 
 getNodeTodoListItem();
 
