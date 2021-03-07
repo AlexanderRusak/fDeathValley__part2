@@ -169,6 +169,25 @@ const sortTodoList = (compare) => {
 
 appendTodoElements(true);
 appendTodoElements(false);
+getElementById("customSwitch1").addEventListener("change", () => {
+    this.value = +!this.value;
+    const fontElement = document.querySelectorAll("h3");
+    console.log(fontElement);
+    if (this.value) {
+        getElementById("body").style.backgroundColor = "#000";
+        for (let i = 0; i < fontElement.length; i++) {
+            fontElement[i].style.color = "#fff";
+        }
 
+    } else {
+        getElementById("body").style.backgroundColor = "#fff";
+        for (let i = 0; i < fontElement.length; i++) {
+            fontElement[i].style.color = "#000";
+        }
+    }
+
+
+
+})
 getElementById("sort-from-new").addEventListener("click", () => sortTodoList("sort-from-new"));
 getElementById("sort-from-old").addEventListener("click", () => sortTodoList("sort-from-old"));
