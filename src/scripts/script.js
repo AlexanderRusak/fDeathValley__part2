@@ -116,9 +116,10 @@ const appendTodoElements = (completedStatus) => {
     console.log(currentTodos);
     const currentNode = completedStatus ? getElementById("completedTasks") : getElementById("currentTasks");
 
-    currentTodos.map(({ id, title, text }) => {
+    currentTodos.map(({ id, title, text, radio: priority }) => {
         const todoLINode = document.createElement("li");
         todoLINode.setAttribute("class", `list-group-item d-flex w-100 mb-2 ${!completedStatus ? "currentTodo" : ""}`);
+        todoLINode.setAttribute("style", `background-color:${!completedStatus ? setTaskBackgroundColor(priority) : setTaskBackgroundColor()}`);
         todoLINode.setAttribute("id", `${id} `);
         currentNode.append(todoLINode);
         todoLINode.innerHTML = getTasksLITemplate(title, text, completedStatus);
@@ -166,6 +167,25 @@ const sortTodoList = (compare) => {
             }
         }).forEach(node => currentContainer.appendChild(node));
 };
+
+const setTaskBackgroundColor = (value = "Completed") => {
+    console.log(value);
+    switch (value) {
+        case "Low":
+            return "green";
+
+        case "Medium":
+            return "yellow";
+        case "High":
+            return "red";
+        default:
+            return "gray";
+
+
+    }
+}
+
+
 
 appendTodoElements(true);
 appendTodoElements(false);
