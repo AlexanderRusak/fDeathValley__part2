@@ -7,8 +7,6 @@ getElementById("new-task").addEventListener("click", () => {
 });
 
 
-
-
 const getMapTodoFromLocalStarage = () => {
     const todos = [];
     for (let key in localStorage) {
@@ -27,7 +25,7 @@ const getTasksLITemplate = (title, text, status) => {
         </div>
         <p class="mb-1 w-100">${text}</p>
     </div>
-        ${!status ? getCurrentAdditionalTemplate():""}`);
+        ${!status ? getCurrentAdditionalTemplate() : ""}`);
 }
 const getCurrentAdditionalTemplate = () => {
     return (`
@@ -59,7 +57,6 @@ const editTodoTask = (selectedNode) => {
     const btn_editTask = getElementById("form-group-save-task");
     btn_editTask.innerText = "Edit task";
     const node_id = +selectedNode.parentNode.parentNode.parentNode.id;
-    /* const { id, title, text, radio: priority, isCompleted } = localStorage.getItem(node_id); */
     const { id, title, text, radio: priority, isCompleted } = JSON.parse(localStorage.getItem(node_id));
     console.log(id, title, text, priority, isCompleted);
     setModalValues(title, text, priority);
@@ -121,7 +118,7 @@ const appendTodoElements = (completedStatus) => {
 
     currentTodos.map(({ id, title, text }) => {
         const todoLINode = document.createElement("li");
-        todoLINode.setAttribute("class", "list-group-item d-flex w-100 mb-2");
+        todoLINode.setAttribute("class", `list-group-item d-flex w-100 mb-2 ${!completedStatus ? "currentTodo" : ""}`);
         todoLINode.setAttribute("id", `${id} `);
         currentNode.append(todoLINode);
         todoLINode.innerHTML = getTasksLITemplate(title, text, completedStatus);
@@ -153,42 +150,25 @@ const addTask = () => {
 
 
 
+const sortTodoList = (compare) => {
+    const currentContainer = getElementById("currentTasks");
+    const compareCore = (compare == "sort-from-new") ? true : false;
+    [...currentContainer.children]
+        .sort((current, next) => {
+            if (current.id > next.id) {
+                return compareCore ? 1 : -1;
+            }
+            if (current.id < next.id) {
+                return !compareCore ? 1 : -1;
+            }
+            if (current.id == next.id) {
+                return 0;
+            }
+        }).forEach(node => currentContainer.appendChild(node));
+};
 
 appendTodoElements(true);
 appendTodoElements(false);
 
-/* const showListTodos = () => {
-    const currentTodos = getMapTodoFromLocalStarage();
-    console.log(currentTodos);
-    const completed = currentTodos.filter(todo => todo.isCompleted == true);
-    const current = currentTodos.filter(todo => todo.isCompleted == false);
-    const currentTasksNode = getElementById("currentTasks");
-    const completedTasksNode = getElementById("completedTasks");
-
-    current.map(({ id, title, text }) => {
-        const todoCurrentLINode = document.createElement("li");
-        todoCurrentLINode.setAttribute("class", "list-group-item d-flex w-100 mb-2");
-        todoCurrentLINode.setAttribute("id", `${ id } `);
-        currentTasksNode.append(todoCurrentLINode);
-        todoCurrentLINode.innerHTML = getCurrentTasksLITemplate(title, text);
-
-    })
-    completed.map(({ id, title, text }) => {
-        const todoCompleteLINode = document.createElement("li");
-        todoCompleteLINode.setAttribute("class", "list-group-item d-flex w-100 mb-2");
-        todoCompleteLINode.setAttribute("id", `${ id } `);
-        completedTasksNode.append(todoCompleteLINode);
-        todoCompleteLINode.innerHTML = getCompleteTasksLITemplate(title, text);
-
-    })
-    const map_removeButton = document.querySelectorAll(".btn-danger");
-    setClicksOnNode(map_removeButton, removeToDoItem);
-
-    const map_editButton = document.querySelectorAll(".btn-info");
-    setClicksOnNode(map_editButton, editTodoTask);
-
-    const map_completeButton = document.querySelectorAll(".btn-success");
-    setClicksOnNode(map_completeButton, completeTodoTask);
-} */
-
-//showListTodos();
+getElementById("sort-from-new").addEventListener("click", () => sortTodoList("sort-from-new"));
+getElementById("sort-from-old").addEventListener("click", () => sortTodoList("sort-from-old"));
