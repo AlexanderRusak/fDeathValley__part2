@@ -43,33 +43,33 @@ const getCurrentAdditionalTemplate = () => {
 }
 const removeToDoItem = (selectedNode) => {
     const key = selectedNode.parentNode.parentNode.parentNode.id;
-    console.log(key);
     const deletingElement = getElementById(key);
     deletingElement.parentNode.removeChild(deletingElement);
     localStorage.removeItem(+key);
-
+    getCountTodos();
 }
 
 const editTodoTask = (selectedNode) => {
 
     $('#exampleModal').modal("show");
     getElementById("exampleModalLabel").innerText = "Edit task";
+
     const btn_editTask = getElementById("form-group-save-task");
     btn_editTask.innerText = "Edit task";
+
     const node_id = +selectedNode.parentNode.parentNode.parentNode.id;
     const { id, title, text, radio: priority, isCompleted } = JSON.parse(localStorage.getItem(node_id));
-    console.log(id, title, text, priority, isCompleted);
+
     setModalValues(title, text, priority);
+
     btn_editTask.addEventListener("click", () => {
         localStorage.removeItem(id);
         addTodoToLocalStorage(id, id, ...getModalValues(), isCompleted);
-
     })
 }
 const completeTodoTask = (selectedNode) => {
     const node_id = +selectedNode.parentNode.parentNode.parentNode.id;
-    console.log(node_id);
-    console.log(localStorage.getItem(node_id));
+
     const { id, title, text, radio: priority, isCompleted } = JSON.parse(localStorage.getItem(node_id));
     localStorage.removeItem(+node_id);
     addTodoToLocalStorage(node_id, id, title, text, priority, !isCompleted);
@@ -92,7 +92,6 @@ const setModalValues = (title, text, priority) => {
 const setClicksOnNode = (node, func) => {
     for (let i = 0; i < node.length; i++) {
         node[i].addEventListener("click", () => {
-            console.log("ok");
             func(node[i]);
         })
     }
@@ -112,8 +111,8 @@ const addTodoToLocalStorage = (key, id, title, text, radio, isCompleted) => {
 }
 
 const appendTodoElements = (completedStatus) => {
+
     const currentTodos = getMapTodoFromLocalStarage().filter(todo => todo.isCompleted == completedStatus);
-    console.log(currentTodos);
     const currentNode = completedStatus ? getElementById("completedTasks") : getElementById("currentTasks");
 
     currentTodos.map(({ id, title, text, radio: priority }) => {
@@ -134,9 +133,8 @@ const appendTodoElements = (completedStatus) => {
 
         const map_completeButton = document.querySelectorAll(".btn-success");
         setClicksOnNode(map_completeButton, completeTodoTask);
-
     }
-
+    getCountTodos();
 }
 
 const addTask = () => {
@@ -169,30 +167,36 @@ const sortTodoList = (compare) => {
 };
 
 const setTaskBackgroundColor = (value = "Completed") => {
-    console.log(value);
     switch (value) {
         case "Low":
             return "green";
-
         case "Medium":
             return "yellow";
         case "High":
             return "red";
         default:
             return "gray";
-
-
     }
 }
 
+const getCountTodos = () => {
+    let countTodos = [];
+    let completedTasks = 0;
+    let currentTask = 0;
+    for (let i = 0; i < localStorage.length; i++) {
+        countTodos.push(localStorage.key(i));
+        JSON.parse(localStorage.getItem(countTodos[i])).isCompleted == true ? completedTasks++ : currentTask++;
+    }
+    getElementById("todosCount").innerText = ` ${currentTask} / ${completedTasks}`;
+}
 
 
 appendTodoElements(true);
 appendTodoElements(false);
+
 getElementById("customSwitch1").addEventListener("change", () => {
     this.value = +!this.value;
     const fontElement = document.querySelectorAll("h3");
-    console.log(fontElement);
     if (this.value) {
         getElementById("body").style.backgroundColor = "#000";
         for (let i = 0; i < fontElement.length; i++) {
@@ -206,8 +210,7 @@ getElementById("customSwitch1").addEventListener("change", () => {
         }
     }
 
+});
 
-
-})
 getElementById("sort-from-new").addEventListener("click", () => sortTodoList("sort-from-new"));
 getElementById("sort-from-old").addEventListener("click", () => sortTodoList("sort-from-old"));
