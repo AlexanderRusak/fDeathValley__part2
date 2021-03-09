@@ -1,6 +1,4 @@
 import * as Handlebars from "handlebars/dist/cjs/handlebars";
-const template = Handlebars.compile("Name: {{name}}");
-console.log(template({ name: "Nils" }));
 
 const getElementById = (id) => {
   return document.getElementById(id);
