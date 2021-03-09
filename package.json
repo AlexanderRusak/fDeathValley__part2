@@ -24,6 +24,7 @@
     "webpack-stats-plugin": "^1.0.3"
   },
   "dependencies": {
-    "@fancyapps/fancybox": "^3.5.7"
+    "@fancyapps/fancybox": "^3.5.7",
+    "handlebars": "^4.7.7"
   }
 }
