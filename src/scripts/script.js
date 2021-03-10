@@ -185,7 +185,7 @@ function toggleStyle() {
 }
 const sortTodoList = (compare) => {
   const currentContainer = getElementById("currentTasks");
-  const compareCore = compare == "sort-from-new" ? true : false;
+  const compareCore = compare === "sort-from-new" ? true : false;
   [...currentContainer.children]
     .sort((current, next) => {
       if (current.id > next.id) {
@@ -220,7 +220,7 @@ const setCountTodos = () => {
   let currentTask = 0;
   for (let i = 0; i < localStorage.length; i++) {
     countTodos.push(localStorage.key(i));
-    JSON.parse(localStorage.getItem(countTodos[i])).isCompleted == true
+    JSON.parse(localStorage.getItem(countTodos[i])).isCompleted
       ? completedTasks++
       : currentTask++;
   }
