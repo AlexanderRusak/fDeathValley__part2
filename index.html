@@ -8,16 +8,11 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
   <script src="https://kit.fontawesome.com/aa7a31f950.js" crossorigin="anonymous"></script>
-  <style>
-    .wrapper {
-      min-height: calc(100vh - 15px);
-      margin: 15px auto 0;
-    }
-  </style>
+
   <title>Death Valley 2</title>
 </head>
 
-<body id="body" cz-shortcut-listen="true">
+<body>
   <div class="container-fluid wrapper">
     <nav class="navbar navbar-light bg-light">
       <h1>MyToDoList</h1>
@@ -41,8 +36,8 @@
           </button>
           <div class="dropdown-menu p-2 dropdown-menu-right" aria-labelledby="dropdownMenuSettings">
             <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="customSwitch1" />
-              <label class="custom-control-label" for="customSwitch1">Black mode</label>
+              <input type="checkbox" class="custom-control-input" id="customSwitch" />
+              <label class="custom-control-label" for="customSwitch">Black mode</label>
             </div>
           </div>
         </div>
@@ -51,7 +46,7 @@
     <div class="row justify-content-center">
       <div class="col-10">
         <h3 class="my-2">
-          ToDo<span style="float: right" id="todosCount">11111111111111111111111111111</span>
+          ToDo<span style="float: right" id="todosCount">0 / 0</span>
         </h3>
         <ul class="list-group flex-wrap justify-content-between" id="currentTasks"></ul>
         <hr />

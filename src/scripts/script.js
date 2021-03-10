@@ -23,13 +23,13 @@ const getTasksLITemplate = (title, text, status) => {
     `
     <div class="w-100 mr-2">
         <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">{{Title}}</h5>
+            <h5 class="mb-1">{{title}}</h5>
         </div>
-        <p class="mb-1 w-100">{{Text}}</p>
+        <p class="mb-1 w-100">{{text}}</p>
     </div>
         ${!status ? getCurrentAdditionalTemplate() : ""}`
   );
-  return taskTemplate({ Title: title, Text: text });
+  return taskTemplate({ title, text });
 };
 const getCurrentAdditionalTemplate = () => {
   return `
@@ -45,7 +45,7 @@ const getCurrentAdditionalTemplate = () => {
     </div>`;
 };
 const removeToDoItem = (selectedNode) => {
-  const key = selectedNode.parentNode.parentNode.parentNode.id;
+  const key = selectedNode.closest(".currentTodo").id;
   const deletingElement = getElementById(key);
   deletingElement.parentNode.removeChild(deletingElement);
   localStorage.removeItem(+key);
@@ -59,7 +59,7 @@ const editTodoTask = (selectedNode) => {
   const btn_editTask = getElementById("form-group-save-task");
   btn_editTask.innerText = "Edit task";
 
-  const node_id = +selectedNode.parentNode.parentNode.parentNode.id;
+  const node_id = +selectedNode.closest(".currentTodo").id;
   const { id, title, text, radio: priority, isCompleted } = JSON.parse(
     localStorage.getItem(node_id)
   );
@@ -169,7 +169,20 @@ const addTask = () => {
     );
   });
 };
-
+function toggleStyle() {
+  const fontElement = document.querySelectorAll("h3");
+  if (this.checked) {
+    document.getElementsByTagName("body")[0].style.backgroundColor = "#000";
+    fontElement.forEach((felement) => {
+      felement.style.color = "#fff";
+    });
+  } else {
+    document.getElementsByTagName("body")[0].style.backgroundColor = "#fff";
+    fontElement.forEach((felement) => {
+      felement.style.color = "#000";
+    });
+  }
+}
 const sortTodoList = (compare) => {
   const currentContainer = getElementById("currentTasks");
   const compareCore = compare == "sort-from-new" ? true : false;
@@ -211,28 +224,14 @@ const setCountTodos = () => {
       ? completedTasks++
       : currentTask++;
   }
-  getElementById(
-    "todosCount"
-  ).innerText = ` ${currentTask} / ${completedTasks}`;
+  const countsTodosElement = getElementById("todosCount");
+  countsTodosElement.innerText = ` ${currentTask} / ${completedTasks}`;
 };
 
 appendTodoElements(true);
 appendTodoElements(false);
 
-getElementById("customSwitch1").addEventListener("change", function () {
-  const fontElement = document.querySelectorAll("h3");
-  if (this.checked) {
-    getElementById("body").style.backgroundColor = "#000";
-    for (let i = 0; i < fontElement.length; i++) {
-      fontElement[i].style.color = "#fff";
-    }
-  } else {
-    getElementById("body").style.backgroundColor = "#fff";
-    for (let i = 0; i < fontElement.length; i++) {
-      fontElement[i].style.color = "#000";
-    }
-  }
-});
+getElementById("customSwitch").addEventListener("change", toggleStyle);
 
 getElementById("sort-from-new").addEventListener("click", () =>
   sortTodoList("sort-from-new")
