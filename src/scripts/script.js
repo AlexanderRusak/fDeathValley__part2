@@ -83,12 +83,11 @@ const completeTodoTask = (selectedNode) => {
 };
 
 const getModalValues = () => {
-  const input_titleValue = getElementById("inputTitle").value;
-  const input_textValue = getElementById("inputText").value;
+  const input_main_text = [getElementById("inputTitle").value, getElementById("inputTitle").value]
   const input_radioValue = document.querySelector(
     'input[name="gridRadios"]:checked'
   ).value;
-  return [input_titleValue, input_textValue, input_radioValue];
+  return [...input_main_text, input_radioValue];
 };
 const setModalValues = (title, text, priority) => {
   getElementById("inputTitle").value = title;
@@ -127,16 +126,14 @@ const appendTodoElements = (completedStatus) => {
     const todoLINode = document.createElement("li");
     todoLINode.setAttribute(
       "class",
-      `list-group-item d-flex w-100 mb-2 ${
-        !completedStatus ? "currentTodo" : ""
+      `list-group-item d-flex w-100 mb-2 ${!completedStatus ? "currentTodo" : ""
       }`
     );
     todoLINode.setAttribute(
       "style",
-      `background-color:${
-        !completedStatus
-          ? setTaskBackgroundColor(priority)
-          : setTaskBackgroundColor()
+      `background-color:${!completedStatus
+        ? setTaskBackgroundColor(priority)
+        : setTaskBackgroundColor()
       }`
     );
     todoLINode.setAttribute("id", `${id} `);
@@ -156,6 +153,11 @@ const appendTodoElements = (completedStatus) => {
   setCountTodos();
 };
 
+const getColorFromSCSS = (element, color) => {
+  return getComputedStyle(element)
+    .getPropertyValue(color === "black" ? "--color-font-black" : "--color-font-white");
+}
+
 const addTask = () => {
   const btn_saveTask = getElementById("form-group-save-task");
   $("#exampleModal").modal("show");
@@ -171,21 +173,23 @@ const addTask = () => {
 };
 function toggleStyle() {
   const fontElement = document.querySelectorAll("h3");
+  const bodyElement = document.getElementsByTagName("body")[0];
   if (this.checked) {
-    document.getElementsByTagName("body")[0].style.backgroundColor = "#000";
-    fontElement.forEach((felement) => {
-      felement.style.color = "#fff";
+    bodyElement.style.backgroundColor = getColorFromSCSS(bodyElement, "black");
+    fontElement.forEach((fElement) => {
+      fElement.style.color = getColorFromSCSS(fElement, "white");
+      console.log(getColorFromSCSS(fElement, "white"));
     });
   } else {
-    document.getElementsByTagName("body")[0].style.backgroundColor = "#fff";
-    fontElement.forEach((felement) => {
-      felement.style.color = "#000";
+    bodyElement.style.backgroundColor = getColorFromSCSS(bodyElement, "white");
+    fontElement.forEach((fElement) => {
+      fElement.style.color = getColorFromSCSS(fElement, "black");
     });
   }
 }
 const sortTodoList = (compare) => {
   const currentContainer = getElementById("currentTasks");
-  const compareCore = compare === "sort-from-new" ? true : false;
+  const compareCore = compare === "sort-from-new";
   [...currentContainer.children]
     .sort((current, next) => {
       if (current.id > next.id) {
@@ -200,6 +204,7 @@ const sortTodoList = (compare) => {
     })
     .forEach((node) => currentContainer.appendChild(node));
 };
+
 
 const setTaskBackgroundColor = (value = "Completed") => {
   switch (value) {
