@@ -17,15 +17,11 @@
       src="https://kit.fontawesome.com/aa7a31f950.js"
       crossorigin="anonymous"
     ></script>
-    <style>
-      .wrapper {
-        min-height: calc(100vh - 15px);
-        margin: 15px auto 0;
-      }
-    </style>
+
     <title>Death Valley 2</title>
   </head>
-  <body id="body" cz-shortcut-listen="true">
+
+  <body>
     <div class="container-fluid wrapper">
       <nav class="navbar navbar-light bg-light">
         <h1>MyToDoList</h1>
@@ -67,10 +63,9 @@
                 <input
                   type="checkbox"
                   class="custom-control-input"
-                  id="customSwitch1"
-                  value="0"
+                  id="customSwitch"
                 />
-                <label class="custom-control-label" for="customSwitch1"
+                <label class="custom-control-label" for="customSwitch"
                   >Black mode</label
                 >
               </div>
@@ -81,9 +76,7 @@
       <div class="row justify-content-center">
         <div class="col-10">
           <h3 class="my-2">
-            ToDo<span style="float: right" id="todosCount"
-              >11111111111111111111111111111</span
-            >
+            ToDo<span style="float: right" id="todosCount">0 / 0</span>
           </h3>
           <ul
             class="list-group flex-wrap justify-content-between"
@@ -98,7 +91,6 @@
         </div>
       </div>
     </div>
-
     <!-- Modal ADD Task -->
     <div
       class="modal fade"
@@ -226,6 +218,6 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
-    <script src="./dist/bundle.js"></script>
+    <script src="../dist/index.js"></script>
   </body>
 </html>

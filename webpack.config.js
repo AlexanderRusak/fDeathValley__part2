@@ -1,32 +1,28 @@
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 module.exports = {
-  plugins: [
-    new MiniCssExtractPlugin({
-      filename: "style.css",
-      linkType: false,
-    }),
-  ],
-  entry: "./src/app.js",
-  output: {
-    path: path.resolve(__dirname, "dist"),
-    filename: "bundle.js",
-  },
-  module: {
-    rules: [
-      {
-        test: /\.(scss|sass|css)$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          { loader: "css-loader", options: { url: false, sourceMap: true } },
-          { loader: "sass-loader", options: { sourceMap: true } },
-        ],
-      },
-      {
-        test: /\.(png|svg|jpg|jpeg|gif)$/,
-        loader: "file-loader",
-        options: { outputPath: "public/images" },
-      },
+    entry: { index: path.resolve("src", "index.js") },
+    output: {
+        path: path.resolve(__dirname, "dist")
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: path.resolve(__dirname, "src", "index.html")
+        })
     ],
-  },
-};
+    module: {
+        rules: [
+            {
+                test: /\.scss$/,
+                use: ["style-loader", "css-loader", "sass-loader"]
+            },
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: ["babel-loader"]
+            },
+
+        ]
+    }
+}
